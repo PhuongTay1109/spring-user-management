@@ -62,12 +62,13 @@ public class UsersManagementService {
 		ReqRes resp = new ReqRes();
 		
 		try {
+			// authenticate user
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 			Users user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow();
+			// create token and send back to frontend
 			String jwt = jwtUtils.generateToken(user);
 			String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-
 			resp.setStatusCode(200);
 			resp.setToken(jwt);
 			resp.setRefreshToken(refreshToken);
