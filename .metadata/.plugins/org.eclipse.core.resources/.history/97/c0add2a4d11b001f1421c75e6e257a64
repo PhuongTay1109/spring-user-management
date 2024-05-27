@@ -1,0 +1,5 @@
+package com.tay.usermanager.config;
+
+public class CorsConfig {
+
+}
