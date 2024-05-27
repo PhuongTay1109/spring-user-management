@@ -1,0 +1,74 @@
+package com.tay.usermanager.config;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.tay.usermanager.service.UsersService;
+import com.tay.usermanager.util.JWTUtils;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+// This class inherits from OncePerRequestFilter,
+// ensuring that this filter is only called once per request.
+@Component
+public class JWTAuthFilter extends OncePerRequestFilter {
+
+	@Autowired
+	private JWTUtils jwtUtils;
+
+	@Autowired
+	private UsersService usersService;
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		final String jwt;
+		final String userEmail;
+		
+	    jwt = resolveToken(request);		
+		
+		if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			userEmail = jwtUtils.extractUsername(jwt);
+			UserDetails userDetails = usersService.loadUserByUsername(userEmail);
+
+            if (jwtUtils.isTokenValid(jwt, userDetails)) {
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities()
+                );
+                // ensure that the authentication object contains 
+                // all necessary information about the HTTP request
+                token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                securityContext.setAuthentication(token);
+                SecurityContextHolder.setContext(securityContext);
+            } 
+		}
+		else {
+            SecurityContextHolder.clearContext(); 
+            System.out.println("Invalid JWT token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"); 
+            return; // Stop further filter execution and return
+        }
+		filterChain.doFilter(request, response);
+	}
+	
+	// Extract "Bearer $token" fron "Authorization" header
+	private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // Remove "Bearer " to get the token
+        }
+        return null;
+    }
+}

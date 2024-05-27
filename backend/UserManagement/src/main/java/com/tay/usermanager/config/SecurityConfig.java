@@ -34,8 +34,9 @@ public class SecurityConfig {
 		// Disable csrf and enable cors using Lambda and Method References
 		httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
 				.authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
-						.requestMatchers("/admin/**").hasAnyAuthority("ADMIN").requestMatchers("/user/**")
-						.hasAnyAuthority("USER").requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+						.requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+						.requestMatchers("/user/**").hasAnyAuthority("USER")
+						.requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
 						.anyRequest().authenticated())
 				// Specify that the application should not use HTTP sessions to store user authentication state. 
 				// Instead, each request will have to be authenticated independently through a JWT
