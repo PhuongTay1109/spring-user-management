@@ -29,14 +29,21 @@ public class UsersManagementService {
 
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
-
+		
+		Optional<Users> userOptional = usersRepo.findByEmail(registrationRequest.getEmail());
+		if (userOptional.isPresent()) {
+			resp.setStatusCode(409); // conflict
+			resp.setMessage("User with this email has already existed");
+			return resp;
+		}
+		
 		try {
 			Users user = new Users();
 			user.setEmail(registrationRequest.getEmail());
 			user.setCity(registrationRequest.getCity());
 			user.setRole(registrationRequest.getRole());
 			user.setName(registrationRequest.getName());
-			user.setPassword(registrationRequest.getPassword());
+			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
 			Users userResult = usersRepo.save(user);
 			if (userResult.getId() > 0) {
@@ -52,8 +59,8 @@ public class UsersManagementService {
 	}
 
 	public ReqRes login(ReqRes loginRequest) {
-
 		ReqRes resp = new ReqRes();
+		
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -126,7 +133,7 @@ public class UsersManagementService {
 			Users userById = usersRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not found"));
 			resp.setUser(userById);
 			resp.setStatusCode(200);
-			resp.setMessage("Users with id '" + userId + "' found successfully");
+			resp.setMessage("User with id '" + userId + "' found successfully");
 		} catch (Exception e) {
 			resp.setStatusCode(500);
 			resp.setMessage("Error occurred: " + e.getMessage());

@@ -27,7 +27,7 @@ public class JWTUtils {
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
-	// user UserDetails instead of using our customer Users because
+	// use UserDetails instead of using our customer Users because
 	//  This makes JWTUtils flexible and 
 	// compatible with any class implementing UserDetails.
     public String generateToken(UserDetails userDetails){

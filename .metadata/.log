@@ -268,3 +268,35 @@ java.lang.InterruptedException
 	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
 	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
 	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY org.eclipse.lsp4e 2 0 2024-05-27 15:23:13.445
+!MESSAGE Javadoc unavailable. Failed to obtain it.
+!STACK 0
+java.lang.InterruptedException
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:386)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2096)
+	at org.eclipse.lsp4e.jdt.LSJavaHoverProvider.getHoverInfo2(LSJavaHoverProvider.java:65)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:130)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:89)
+	at org.eclipse.jface.text.TextViewerHoverManager$1.run(TextViewerHoverManager.java:155)
+
+!ENTRY Activator 4 0 2024-05-27 16:17:25.908
+!MESSAGE Cannot invoke "org.osgi.framework.BundleContext.addBundleListener(org.osgi.framework.BundleListener)" because the return value of "org.osgi.framework.Bundle.getBundleContext()" is null
+!STACK 0
+java.lang.NullPointerException: Cannot invoke "org.osgi.framework.BundleContext.addBundleListener(org.osgi.framework.BundleListener)" because the return value of "org.osgi.framework.Bundle.getBundleContext()" is null
+	at org.springframework.ide.eclipse.boot.dash.model.LocalBootDashModel.addMavenInitializationIssueEventHandling(LocalBootDashModel.java:166)
+	at org.springframework.ide.eclipse.boot.dash.model.LocalBootDashModel.<init>(LocalBootDashModel.java:140)
+	at org.springframework.ide.eclipse.boot.dash.model.LocalRunTarget.createSectionModel(LocalRunTarget.java:62)
+	at org.springframework.ide.eclipse.boot.dash.model.BootDashModelManager$RunTargetChangeListener.gotValue(BootDashModelManager.java:90)
+	at org.springframework.ide.eclipse.boot.dash.model.BootDashModelManager$RunTargetChangeListener.gotValue(BootDashModelManager.java:1)
+	at org.springsource.ide.eclipse.commons.livexp.core.LiveExpression.addListener(LiveExpression.java:171)
+	at org.springframework.ide.eclipse.boot.dash.model.BootDashModelManager.getModels(BootDashModelManager.java:62)
+	at org.springframework.ide.eclipse.boot.dash.model.BootDashViewModel.getSectionModels(BootDashViewModel.java:114)
+	at org.springframework.ide.eclipse.boot.dash.model.remote.GenericRemoteAppElementDataContributor.lambda$0(GenericRemoteAppElementDataContributor.java:36)
+	at org.springsource.ide.eclipse.commons.livexp.core.ObservableSet$Builder$1.compute(ObservableSet.java:46)
+	at org.springsource.ide.eclipse.commons.livexp.core.ObservableSet$Builder$1.compute(ObservableSet.java:1)
+	at org.springsource.ide.eclipse.commons.livexp.core.LiveExpression.refresh(LiveExpression.java:74)
+	at org.springsource.ide.eclipse.commons.livexp.core.AsyncLiveExpression.syncRefresh(AsyncLiveExpression.java:134)
+	at org.springsource.ide.eclipse.commons.livexp.core.AsyncLiveExpression$1.run(AsyncLiveExpression.java:101)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
