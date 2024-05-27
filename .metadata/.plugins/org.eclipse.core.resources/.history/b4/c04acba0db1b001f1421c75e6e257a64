@@ -1,0 +1,43 @@
+package com.tay.usermanager.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.tay.usermanager.dto.ReqRes;
+import com.tay.usermanager.model.Users;
+import com.tay.usermanager.repository.UsersRepo;
+import com.tay.usermanager.util.JWTUtils;
+
+@Service
+public class UsersManagementService {
+	
+	@Autowired
+	private UsersRepo usersRepo;	
+	@Autowired
+	private JWTUtils jwtUtils;	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	public ReqRes registeReqRes(ReqRes regisReq) {
+		ReqRes resp = new ReqRes();
+		
+		try {
+			Users user= new Users();
+			user.setEmail(regisReq.getEmail());
+			user.setCity(regisReq.getCity());
+			user.setRole(regisReq.getRole());
+			user.setName(regisReq.getName());
+			user.setPassword(regisReq.getPassword());
+			Users userResult = usersRepo.save(user);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+}
