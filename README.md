@@ -47,7 +47,7 @@
     <ol>
         <li>Clone the repository:
             <pre><code>git clone https://github.com/PhuongTay1109/spring-jwt-demo
-cd users-management-portal/backend
+cd backend/UserManagement
             </code></pre>
         </li>
         <li>Configure the database in <code>application.properties</code>:
