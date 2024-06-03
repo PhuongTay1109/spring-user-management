@@ -13,12 +13,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;	
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;	
 
 @Component
 public class JWTUtils {
 	private SecretKey key; // the secret key used to sign and verify the JWT.
-	private static final long EXPIRATION_TIME = 86400000L; // 24 hours
+	//private static final long EXPIRATION_TIME = 86400000L; // 24 hours
+	private static final long EXPIRATION_TIME = 10000L;
 
 	// constructor
 	public JWTUtils(){
@@ -39,7 +44,7 @@ public class JWTUtils {
                 .compact();
     }
     
-    public  String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails){
+    public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails){
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
@@ -51,11 +56,16 @@ public class JWTUtils {
 
     // "claims" are attributes or information embedded within the token
     private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction){
-    	return claimsTFunction.apply(Jwts.parser()
-							    		   .verifyWith(key)
-							    	       .build()
-							    		   .parseSignedClaims(token)
-							    		   .getPayload());
+    	try {
+    		return claimsTFunction.apply(Jwts.parser()
+		    		   .verifyWith(key)
+		    	       .build()
+		    		   .parseSignedClaims(token)
+		    		   .getPayload());
+		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+            throw e;
+        }
+    	
     }
     
     public String extractUsername(String token){

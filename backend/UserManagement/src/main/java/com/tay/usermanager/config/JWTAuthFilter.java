@@ -25,90 +25,80 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// This class inherits from OncePerRequestFilter,
-// ensuring that this filter is only called once per request.
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private JWTUtils jwtUtils;
+    @Autowired
+    private JWTUtils jwtUtils;
 
-	@Autowired
-	private UsersService usersService;
+    @Autowired
+    private UsersService usersService;
 
-	private static final Set<String> EXCLUDE_URL_PATTERNS = Stream.of("/auth/", "/public/")
+    private static final Set<String> EXCLUDE_URL_PATTERNS = Stream.of("/auth/", "/public/")
             .collect(Collectors.toSet());
 
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-	
-		if (ignore(request.getRequestURI())) {
-			System.err.println("URI IGNORE");
-			filterChain.doFilter(request, response);
-			return;
-		}
+        if (ignore(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-		final String jwt;
-		jwt = resolveToken(request);
+        final String jwt;
+        jwt = resolveToken(request);
 
-		// Request doesn't have jwt
-		if (jwt == null || jwt.equals("null")) {
-			SecurityContextHolder.clearContext();
-			System.out.println("Invalid JWT token");
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-			return; // Stop further filter execution and return
-		}
+        // Request doesn't have jwt
+        if (jwt == null || jwt.equals("null")) {
+            SecurityContextHolder.clearContext();
+            System.out.println("Invalid JWT token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            return; // Stop further filter execution and return
+        }
 
-		try {
-			String userEmail = jwtUtils.extractUsername(jwt);
+        try {
+            String userEmail = jwtUtils.extractUsername(jwt);
 
-			if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				UserDetails userDetails = usersService.loadUserByUsername(userEmail);
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = usersService.loadUserByUsername(userEmail);
 
-				if (jwtUtils.isTokenValid(jwt, userDetails)) {
-					UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails,
-							null, userDetails.getAuthorities());
-					token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(token);
-				}
-			}
-		} catch (ExpiredJwtException e) {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token has expired");
-			return;
-		} catch (MalformedJwtException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
-			return;
-		} catch (SignatureException e) {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature");
-			return;
-		} catch (UnsupportedJwtException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unsupported JWT token");
-			return;
-		} catch (IllegalArgumentException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT token compact of handler are invalid");
-			return;
-		}
+                if (jwtUtils.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+                    token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(token);
+                }
+            }
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+            return;
+        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
+            return;
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the JWT token");
+            return;
+        }
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 
-	// Extract "Bearer $token" fron "Authorization" header
-	private String resolveToken(HttpServletRequest request) {
-		String bearerToken = request.getHeader("authorization");
+    // Extract "Bearer $token" from "Authorization" header
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("authorization");
 
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			String jwtString = bearerToken.substring(7);
-			if (jwtString == null)
-				return null;
-			return bearerToken.substring(7);
-		}
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            String jwtString = bearerToken.substring(7);
+            if (jwtString == null)
+                return null;
+            return bearerToken.substring(7);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private boolean ignore(String path) {
+    private boolean ignore(String path) {
         return EXCLUDE_URL_PATTERNS.stream().anyMatch(path::startsWith);
     }
 }
