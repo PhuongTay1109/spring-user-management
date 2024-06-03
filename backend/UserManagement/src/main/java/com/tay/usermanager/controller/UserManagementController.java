@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tay.usermanager.dto.ReqRes;
+import com.tay.usermanager.exception.ExistedUserException;
 import com.tay.usermanager.model.Users;
 import com.tay.usermanager.service.UsersManagementService;
 
@@ -23,7 +24,7 @@ public class UserManagementController {
 	private UsersManagementService usersManagementService;
 
 	@PostMapping("/auth/register")
-	public ResponseEntity<ReqRes> register(@RequestBody ReqRes req) {
+	public ResponseEntity<ReqRes> register(@RequestBody ReqRes req) throws ExistedUserException {
 		return ResponseEntity.ok(usersManagementService.register(req));
 	}
 

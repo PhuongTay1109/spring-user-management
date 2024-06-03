@@ -22,8 +22,7 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class JWTUtils {
 	private SecretKey key; // the secret key used to sign and verify the JWT.
-	//private static final long EXPIRATION_TIME = 86400000L; // 24 hours
-	private static final long EXPIRATION_TIME = 10000L;
+	private static final long EXPIRATION_TIME = 86400000L; // 24 hours
 
 	// constructor
 	public JWTUtils(){

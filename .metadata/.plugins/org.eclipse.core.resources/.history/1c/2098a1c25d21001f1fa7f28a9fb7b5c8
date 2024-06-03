@@ -1,0 +1,5 @@
+package com.tay.usermanager.exception;
+
+public class GlobalExceptionHandler {
+
+}
