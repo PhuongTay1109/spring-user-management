@@ -80,16 +80,17 @@ public class UsersManagementService {
 	public ReqRes refreshToken(ReqRes refreshTokenRequest) {
 		ReqRes resp = new ReqRes();
 
-		String email = jwtUtils.extractUsername(refreshTokenRequest.getToken());
+		String email = jwtUtils.extractUsername(refreshTokenRequest.getRefreshToken());
 		Users user = usersRepo.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("User with email '" + email + "' not found"));
 
-		if (jwtUtils.isTokenValid(refreshTokenRequest.getToken(), user)) {
+		if (jwtUtils.isTokenValid(refreshTokenRequest.getRefreshToken(), user)) {
 			String jwt = jwtUtils.generateToken(user);
 			resp.setStatusCode(HttpStatus.OK.value());
 			resp.setToken(jwt);
-			resp.setRefreshToken(refreshTokenRequest.getToken());
-			resp.setExpirationTime("24Hrs");
+			resp.setRefreshToken(refreshTokenRequest.getRefreshToken());
+			resp.setRefreshTokenExpirationTime("24Hrs");
+			resp.setExpirationTime("10Mins");
 			resp.setMessage("Successfully refreshed token");
 		}
 

@@ -12,7 +12,8 @@ function ProfilePage() {
     const fetchProfileInfo = async () => {
         try {
             const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-            const response = await UserService.getYourProfile(token);
+            const refreshToken = localStorage.getItem('refreshToken');
+            const response = await UserService.getYourProfile(token, refreshToken);
             console.log(response)
             setProfileInfo(response.user);
             console.log(profileInfo);

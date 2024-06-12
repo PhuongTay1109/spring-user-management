@@ -1,8 +1,0 @@
-package com.tay.usermanager.exception;
-
-public class ExistedUserException extends Exception {
-	public ExistedUserException(String message) {
-		super(message);
-	}
-
-}

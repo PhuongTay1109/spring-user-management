@@ -25,11 +25,11 @@ class UserService {
         }
     }
 
-    static async getAllUsers(token) {
+    static async getAllUsers(token, refreshToken) {
         try {
             const response = await AxiosInstance.get(`${UserService.BASE_URL}/admin/get-all-users`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`,  'Authorization-Refresh': `Bearer ${refreshToken}`}
                 })
             return response.data;
         } catch (err) {
@@ -38,11 +38,11 @@ class UserService {
     }
 
 
-    static async getYourProfile(token) {
+    static async getYourProfile(token, refreshToken) {
         try {
             const response = await AxiosInstance.get(`${UserService.BASE_URL}/adminuser/get-profile`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, 'Authorization-Refresh': `Bearer ${refreshToken}`}
                 })
             console.log(response.data);
             return response.data;
@@ -51,11 +51,11 @@ class UserService {
         }
     }
 
-    static async getUserById(userId, token) {
+    static async getUserById(userId, token, refreshToken) {
         try {
             const response = await AxiosInstance.get(`${UserService.BASE_URL}/admin/get-user/${userId}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, 'Authorization-Refresh': `Bearer ${refreshToken}` }
                 })
             return response.data;
         } catch (err) {
@@ -63,11 +63,11 @@ class UserService {
         }
     }
 
-    static async deleteUser(userId, token) {
+    static async deleteUser(userId, token, refreshToken) {
         try {
             const response = await AxiosInstance.delete(`${UserService.BASE_URL}/admin/delete/${userId}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, 'Authorization-Refresh': `Bearer ${refreshToken}` }
                 })
             return response.data;
         } catch (err) {
@@ -76,11 +76,11 @@ class UserService {
     }
 
 
-    static async updateUser(userId, userData, token) {
+    static async updateUser(userId, userData, token, refreshToken) {
         try {
             const response = await AxiosInstance.put(`${UserService.BASE_URL}/admin/update/${userId}`, userData,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, 'Authorization-Refresh': `Bearer ${refreshToken}` }
                 })
             return response.data;
         } catch (err) {

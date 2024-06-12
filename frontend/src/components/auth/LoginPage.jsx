@@ -17,6 +17,7 @@ function LoginPage() {
             console.log(userData)
             if (userData.token) {
                 localStorage.setItem('token', userData.token)
+                localStorage.setItem('refreshToken', userData.refreshToken)
                 localStorage.setItem('role', userData.role)
                 navigate('/profile')
             } else {

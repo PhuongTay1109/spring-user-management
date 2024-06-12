@@ -53,7 +53,10 @@
     <fullyQualifiedTypeName name="com.tay.usermanager.exception.UserNotFoundException"/>
     <fullyQualifiedTypeName name="com.tay.usermanager.model.Users"/>
     <fullyQualifiedTypeName name="java.lang.Throwable"/>
-    <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="com.tay.usermanager.exception.ExistedUserException"/>
     <fullyQualifiedTypeName name="java.lang.Exception"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="org.springframework.http.HttpHeaders"/>
+    <fullyQualifiedTypeName name="org.springframework.http.MediaType"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
 </qualifiedTypeNameHistroy>
