@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="jwt"/>
+		<item key="selection" value="resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="resp.setStatusCode(500);"/>
+			<item value="resp.setStatusCode(404);"/>
+			<item value="resp.setStatusCode(200);"/>
 			<item value="jwtToken"/>
 			<item value="regisReq"/>
 		</list>
 		<list key="replacehistory">
+			<item value="resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);"/>
+			<item value="resp.setStatusCode(HttpStatus.NOT_FOUND);"/>
+			<item value="resp.setStatusCode(HttpStatus.OK);"/>
 			<item value="jwt"/>
 			<item value="registrationRequest"/>
 		</list>

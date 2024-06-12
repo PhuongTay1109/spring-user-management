@@ -10,6 +10,7 @@ import com.tay.usermanager.dto.ReqRes;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
 	@ExceptionHandler(Exception.class) 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<ReqRes> handleGeneralException(Exception e) {

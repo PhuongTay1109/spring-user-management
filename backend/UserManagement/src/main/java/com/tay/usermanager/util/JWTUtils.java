@@ -22,7 +22,8 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class JWTUtils {
 	private SecretKey key; // the secret key used to sign and verify the JWT.
-	private static final long EXPIRATION_TIME = 86400000L; // 24 hours
+	private static final long ACCESS_EXPIRATION_TIME = 10000L; //600000L; // 10 mins 
+	private static final long REFRESH_EXPIRATION_TIME = 86400000L; // 24 hours
 
 	// constructor
 	public JWTUtils(){
@@ -38,7 +39,7 @@ public class JWTUtils {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
     }
@@ -48,7 +49,7 @@ public class JWTUtils {
                 .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
     }

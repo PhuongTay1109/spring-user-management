@@ -63,14 +63,15 @@ public class UsersManagementService {
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 		Users user = usersRepo.findByEmail(loginRequest.getEmail()).orElseThrow(
 				() -> new UserNotFoundException("User with email '" + loginRequest.getEmail() + "' not found"));
-		// create token and send back to frontend
+		// create token, refesh token and send back to frontend
 		String jwt = jwtUtils.generateToken(user);
 		String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 		resp.setStatusCode(HttpStatus.OK.value());
 		resp.setToken(jwt);
 		resp.setRefreshToken(refreshToken);
 		resp.setRole(user.getRole());
-		resp.setExpirationTime("24Hrs");
+		resp.setExpirationTime("10Mins");
+		resp.setRefreshTokenExpirationTime("24Hrs");
 		resp.setMessage("Successfully logged in");
 
 		return resp;

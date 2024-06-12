@@ -52,7 +52,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         // Request doesn't have jwt
         if (jwt == null || jwt.equals("null")) {
             SecurityContextHolder.clearContext();
-            System.out.println("Invalid JWT token");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
             return; // Stop further filter execution and return
         }
@@ -71,6 +70,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException e) {
+        	// Token expired
+            System.out.println("Token expired, sending 401 status.");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
             return;
         } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
